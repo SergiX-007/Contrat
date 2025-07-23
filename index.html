@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contrat d'Amour Éternel</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500&display=swap"
+    rel="stylesheet">
+    
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-image: url('https://static.vecteezy.com/ti/photos-gratuite/p1/35656118-ai-genere-magnifique-rouge-rose-contexte-gratuit-photo.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #333;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255, 200, 200, 0.15) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(200, 230, 255, 0.15) 0%, transparent 20%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .heart-animation {
+      position: fixed;
+      pointer-events: none;
+      z-index: 10;
+      animation: floatHeart 4s linear forwards;
+    }
+
+    @keyframes floatHeart {
+      0% {
+        transform: translate(0, 0) scale(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(var(--x), var(--y)) scale(var(--scale));
+        opacity: 0;
+      }
+    }
+
+    header {
+      background-color: transparent;
+      padding: 20px;
+      text-align: center;
+      position: relative;
+      z-index: 5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+    }
+
+    header h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3.5em;
+      color: #b30000;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+      margin: 0;
+    }
+
+    .start-button {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: transparent;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .start-title {
+      text-align: center;
+      margin-bottom: 40px;
+      max-width: 800px;
+      padding: 0 20px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 15px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .start-title h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: 4.5rem;
+      color: #b30000;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .start-title p {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      color: #070000;
+      line-height: 1.6;
+    }
+
+    .start-button button {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      border: none;
+      background: linear-gradient(145deg, #c0392b, #e74c3c);
+      color: white;
+      font-size: 2.5em;
+      cursor: pointer;
+      margin-top: 20px;
+      box-shadow: 0 5px 15px rgba(192, 57, 43, 0.4);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      animation: pulse 2s infinite;
+    }
+
+    .start-button button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 8px 20px rgba(192, 57, 43, 0.6);
+    }
+
+    .start-button button::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      transform: scale(0);
+      transition: transform 0.3s ease;
+    }
+
+    .start-button button:hover::after {
+      transform: scale(1.8);
+      opacity: 0;
+    }
+
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.7);
+      }
+
+      70% {
+        box-shadow: 0 0 0 15px rgba(192, 57, 43, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(192, 57, 43, 0);
+      }
+    }
+
+    .page {
+      display: none;
+      padding: 40px 20px;
+      text-align: center;
+      max-width: 800px;
+      margin: 0 auto;
+      min-height: 100vh;
+    }
+
+    .contract-container {
+       background:rgba(255, 229, 229, 0.923);
+      border-radius: 15px;
+      padding: 40px 30px;
+      box-shadow: 0 10px 30px rgba(139, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(139, 0, 0, 0.1);
+    }
+
+    h2 {
+      margin-top: 30px;
+      color: #8b0000;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    h2::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #8b0000, transparent);
+    }
+
+    .contract-container p {
+      margin-top: 15px;
+      line-height: 1.8;
+      text-align: center;
+      font-size: 1.05rem;
+      color: #121212;
+    }
+
+    .profile-btn {
+      font-size: 1.5em;
+      color: #8b0000;
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      z-index: 10;
+    }
+
+    .profile-btn:hover {
+      transform: scale(1.1);
+    }
+
+    .signatures {
+      margin-top: 50px;
+      display: flex;
+      justify-content: center;
+      gap: 60px;
+      position: relative;
+    }
+
+    .signatures::before {
+      content: "❤";
+      position: absolute;
+      top: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.5rem;
+      color: #7a0000;
+    }
+
+    .signature-box {
+      text-align: center;
+      position: relative;
+      padding: 20px;
+    }
+
+    .signature-box::before {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: #c0392b;
+      
+    }
+
+    .signature-name {
+      margin-top: 10px;
+      font-weight: bold;
+      font-family: "Charm", cursive;
+      font-size: 1rem;
+      color: #8b0000;
+    }
+
+    .signature-date {
+      font-size: 0.9em;
+      color: #777;
+      margin-top: 5px;
+      font-style: italic;
+    }
+
+    .profiles {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 40px;
+      margin-top: 30px;
+    }
+
+    .profile-box {
+      text-align: center;
+      position: relative;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+      max-width: 280px;
+    }
+
+    .profile-box:hover {
+      transform: translateY(-10px);
+    }
+
+    .profile-box img {
+      width: 180px;
+      height: 180px;
+      border-radius: 15px;
+      object-fit: cover;
+      border: 5px solid #fff;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .profile-box:hover img {
+     transform: scale(1.05);
+    }
+
+    .profile-box p {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1rem;
+      color: #8b0000;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .love-quote {
+      font-style: italic;
+      color: #7a0000;
+      margin-top: 15px;
+      padding: 10px;
+      border-left: 3px solid #e74c3c;
+      text-align: left;
+    }
+
+    .return-button {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+    }
+
+    .return-button button {
+      padding: 12px 30px;
+      background: linear-gradient(145deg, #c0392b, #e74c3c);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 4px 10px rgba(192, 57, 43, 0.3);
+    }
+
+    .return-button button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(192, 57, 43, 0.4);
+    }
+
+    .return-button button:active {
+      transform: translateY(1px);
+    }
+
+    .page-transition {
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .heart-stamp {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 3rem;
+      color: rgba(192, 57, 43, 0.15);
+      transform: rotate(15deg);
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      color: #777;
+      font-size: 0.9rem;
+      margin-top: 40px;
+    }
+
+    .sign-btn {
+      margin-top: 15px;
+      padding: 8px 20px;
+      background: linear-gradient(145deg, #c0392b, #e74c3c);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .sign-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(192, 57, 43, 0.3);
+    }
+
+    .sign-btn:disabled {
+      background: linear-gradient(145deg, #95a5a6, #bdc3c7);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    @media (max-width: 768px) {
+      .start-title h1 {
+        font-size: 3.5rem;
+      }
+
+      .profiles {
+        flex-direction: column;
+      }
+
+      .signatures {
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      .contract-container {
+        padding: 30px 20px;
+      }
+
+      .profile-box {
+        max-width: 100%;
+      }
+
+      header {
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .start-title {
+        padding: 15px;
+        margin: 0 20px 40px;
+      }
+      
+      .start-title h1 {
+        font-size: 3rem;
+      }
+    }
+    
+    .error-message {
+      color: #c0392b;
+      background: rgba(255, 229, 229, 0.9);
+      padding: 10px;
+      border-radius: 5px;
+      margin-top: 10px;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="start-button" id="home">
+    <div class="start-title">
+      <h1>Contrat d'Amour Éternel</h1>
+      <p> <strong> "La distance n'est pas pour les peureux, elle est pour les audacieux. Elle est faite pour ceux qui sont prêts à passer beaucoup de temps seuls en échange d'un peu de temps avec la personne qu'ils aiment." -
+        Meghan Daum </strong></p>
+    </div>
+    <button onclick="startContract()"><i class="fas fa-heart"></i></button>
+  </div>
+
+  <div class="page" id="contract">
+    <header>
+      <h1>Lois en vigueur</h1>
+      <button class="profile-btn" onclick="goToProfile()"><i class="fas fa-user"></i></button>
+    </header>
+    <div class="contract-container">
+      <div class="heart-stamp">
+        <i class="fas fa-heart"></i>
+      </div>
+
+      <h2>Article 1 : Communication</h2>
+      <p>
+        - Nous nous engageons à communiquer ouvertement et honnêtement l’un avec l’autre. <br>
+        - Nous nous efforçons de résoudre les conflits de manière constructive et respectueuse.
+      </p>
+
+      <h2>Article 2 : Respect et Confiance</h2>
+      <p>
+        - Nous nous engageons à nous respecter mutuellement et à nous faire confiance. <br>
+        - Nous nous soutenons dans nos décisions et nos actions.
+      </p>
+
+      <h2>Article 3 : Responsabilités</h2>
+      <p>
+        - Nous partageons les responsabilités ménagères, financières et familiales de manière équitable, en fonction de
+        nos capacités et disponibilités respectives. <br>
+        - Nous construirons ensemble notre avenir.</p>
+
+      <h2>Article 4 : Intimité et affection</h2>
+      <p>
+        - Nous nous engageons à entretenir une relation intime, saine, complice et épanouie.<br>
+        - Nous cultivons notre désir l’un pour l’autre, avec tendresse, spontanéité, humour… et quelques surprises.<br>
+        - Nous nous efforçons de rester à l’écoute des envies de l’autre, de nourrir notre vie affective et sensuelle
+        avec créativité et respect.<br>
+        - Nous accordons une place essentielle aux câlins, aux baisers, aux moments à deux… et à toutes les formes
+        d’expressions de notre amour.
+      </p>
+
+      <h2>Article 5 : Conflits et désaccords</h2>
+      <p>
+        - Nous nous engageons à résoudre les conflits de manière constructive et respectueuse.
+        - Nous nous efforçons de trouver des solutions qui conviennent à tous les deux.
+
+      </p>
+
+      <h2>Article 6 : Évolution et croissance</h2>
+      <p>
+        - Nous nous engageons à nous soutenir mutuellement dans notre évolution personnelle, professionnelle et notre
+        croissance. <br>
+        - Nous nous efforçons de nous encourager et de nous motiver l’un l’autre.</p>
+
+      <h2>Article 7 : Engagement</h2>
+      <p>
+        - Nous nous engageons à nous aimer et à nous respecter pour le meilleur et pour le pire, dans la santé comme
+        dans la maladie, dans la richesse comme dans la pauvreté, aujourd'hui et pour toujours. <br>
+
+        - Nous nous efforçons de maintenir une relation saine et épanouissante. <br> </p>
+      <h2></h2>
+      <p>
+
+        En approuvant ce contrat, nous nous engageons à respecter et à honorer les termes ci-dessus.
+      </p>
+
+      <div class="signatures">
+        <div class="signature-box">
+          <div class="signature-name">ASONDRAZANIAINA Harena Asondrotra Sergio</div>
+          <div class="signature-date" id="sergio-date"></div>
+          <button class="sign-btn" id="sergio-btn" onclick="signContract('sergio')">Appuyez pour approuver</button>
+          <div class="error-message" id="sergio-error"></div>
+        </div>
+        <div class="signature-box">
+          <div class="signature-name">RAZAFINDRABE Santatriniaina Rosa</div>
+          <div class="signature-date" id="rosa-date"></div>
+          <button class="sign-btn" id="rosa-btn" onclick="signContract('rosa')">Appuyez pour approuver</button>
+          <div class="error-message" id="rosa-error"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="profile">
+    <header>
+      <h1>Deux Âmes, Un Seul Cœur</h1>
+    </header>
+    <div class="contract-container">
+      <div class="profiles">
+        <div class="profile-box">
+          <img
+            src="https://scontent.ftnr4-2.fna.fbcdn.net/v/t39.30808-6/475710416_1506055336737014_287163810019576092_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeFfZp_o-G0Y1H9BmaD7WTZTcr-IR8SsswZyv4hHxKyzBhyK5aQrow88Wj3MkFrUDULapJoGJxtNgoeZ6s_U1inE&_nc_ohc=RsJshZup2tMQ7kNvwEWDV8Y&_nc_oc=Adn6RHA8m1tI_B0Ht3QRTGSej49sHtQOA80QEB74dXqce_DrL1Fsq2nJJJ15uPYA69Y&_nc_zt=23&_nc_ht=scontent.ftnr4-2.fna&_nc_gid=ARaW77LD7aHDcB-kU07g2Q&oh=00_AfT6eAQPfviYLwUxWLNgwcvDat01CCgIUd_-Nxcy3dpaCg&oe=688635A9"
+            alt="Sergio">
+          <p>ASONDRAZANIAINA Harena Asondrotra Sergio</p>
+          <div class="love-quote">"On est inséparable comme le jour et la nuit. Telle que la lumières sans les ténèbres."</div>
+        </div>
+        <div class="profile-box">
+          <img
+            src="https://scontent.ftnr4-2.fna.fbcdn.net/v/t39.30808-6/492371703_122233799414068809_2763308346555322570_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeEyGQ2087cxLG1T1AymTJEaccEHlK0Gz0pxwQeUrQbPSpbU09PAXn_hB1Zvs4iY5WpHNJxoi-3J1MBcp3b5lm7t&_nc_ohc=VLr2TpUuxN4Q7kNvwHmlg_M&_nc_oc=AdmyMo1DXtc0jfmX8cVzzlhF5Lu9-wKxhOo-Onijk928QAFzxa5jxNbkYrYWlBxAdm4&_nc_zt=23&_nc_ht=scontent.ftnr4-2.fna&_nc_gid=b-ej4XLyQ8FGNQAb82jlDQ&oh=00_AfR8T5KAJrUKTqJI_QWoQs91_7Ohc9fnHPad_e5QBM3Hcg&oe=6886287D"
+            alt="Rosa">
+          <p>RAZAFINDRABE Santatriniaina Rosa</p>
+          <div class="love-quote">"Nous sommes liés comme l'ombre et la lumière. Indivisibles, notre amour est éternel."</div>
+        </div>
+      </div>
+
+      <div class="love-story">
+        <h2>Notre Histoire</h2>
+        <p>Le destin nous a réunis un jour d'union, alors que la vie semblait suivre son cours ordinaire. Depuis ce
+          jour, chaque instant partagé a tissé entre nos cœurs un lien indestructible. Nos rires, nos rêves, nos
+          espoirs et même nos mécontentement ont forgé cette relation unique qui nous unit aujourd'hui.</p>
+        <p>À travers les défis et les joies, nous éspérons encore que notre amour soit plus fort que tout. Ce contrat
+          symbolise notre engagement mutuel à chérir et nourrir cette flamme sacrée pour l'éternité.</p>
+      </div>
+    </div>
+    <div class="return-button">
+      <button onclick="goToHome()"><i class="fas fa-arrow-left"></i></button>
+    </div>
+  </div>
+
+ 
+
+  <audio id="bg-music" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    // Configuration et initialisation
+    document.addEventListener('DOMContentLoaded', async () => {
+      // 1. Initialisation de Supabase
+      const SUPABASE_URL = 'https://wexfdexriqjsfojletca.supabase.co';
+      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndleGZkZXhyaXFqc2ZvamxldGNhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMyMTMwMjUsImV4cCI6MjA2ODc4OTAyNX0.R28mJXOohvtsjJCgqgB3t1Zjjn9c9ndItadg6DMjHXE';
+      
+      window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      
+      // 2. Test de connexion
+      try {
+        const { data, error } = await window.supabase
+          .from('signatures')
+          .select('*')
+          .limit(1);
+          
+        if (error) throw error;
+        console.log('Connexion à Supabase établie avec succès');
+        
+        // 3. Charger les signatures existantes
+        await checkSignatures();
+        
+      } catch (error) {
+        console.error('Erreur de connexion à Supabase:', error);
+        alert("Erreur de connexion à la base de données. Veuillez recharger la page.");
+      }
+      
+      // 4. Initialiser les animations
+      generateRandomHearts();
+    });
+
+    // Fonctions principales
+    async function signContract(person) {
+      const btn = document.getElementById(`${person}-btn`);
+      const dateElement = document.getElementById(`${person}-date`);
+      const errorElement = document.getElementById(`${person}-error`);
+      
+      try {
+        btn.disabled = true;
+        btn.textContent = "Signature en cours...";
+        
+        const now = new Date();
+        const formattedDate = now.toLocaleString('fr-FR', {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        // Envoi à Supabase
+        const { error } = await window.supabase
+          .from('signatures')
+          .insert([{
+            name: person,
+            signed_at: now.toISOString(),
+            formatted_date: formattedDate
+          }]);
+
+        if (error) throw error;
+
+        // Mise à jour de l'interface
+        dateElement.textContent = `Signé le ${formattedDate}`;
+        btn.textContent = "Signé";
+        if (errorElement) errorElement.style.display = 'none';
+        
+        createHeartAnimation();
+        await checkBothSigned();
+        
+      } catch (error) {
+        console.error("Erreur de signature:", error);
+        btn.disabled = false;
+        btn.textContent = "Appuyez pour approuver";
+        
+        if (errorElement) {
+          errorElement.textContent = "Erreur lors de la signature. Veuillez réessayer.";
+          errorElement.style.display = 'block';
+        }
+      }
+    }
+
+    async function checkSignatures() {
+      try {
+        const { data, error } = await window.supabase
+          .from('signatures')
+          .select('name, formatted_date')
+          .order('signed_at', { ascending: false });
+
+        if (error) throw error;
+
+        // Garder seulement la dernière signature par personne
+        const latestSignatures = data.reduce((acc, signature) => {
+          if (!acc[signature.name]) {
+            acc[signature.name] = signature;
+          }
+          return acc;
+        }, {});
+
+        // Mettre à jour l'interface
+        for (const [name, signature] of Object.entries(latestSignatures)) {
+          const dateElement = document.getElementById(`${name}-date`);
+          const btn = document.getElementById(`${name}-btn`);
+          
+          if (dateElement && btn) {
+            dateElement.textContent = `Signé le ${signature.formatted_date}`;
+            btn.disabled = true;
+            btn.textContent = "Signé";
+          }
+        }
+      } catch (error) {
+        console.error("Erreur lors du chargement des signatures:", error);
+      }
+    }
+
+    async function checkBothSigned() {
+      try {
+        const { data, error } = await window.supabase
+          .from('signatures')
+          .select('name');
+          
+        if (error) throw error;
+        
+        const signers = new Set(data.map(item => item.name));
+        if (signers.has('sergio') && signers.has('rosa')) {
+          alert('Contrat scellé pour l\'éternité ! ❤️');
+          createHeartAnimation();
+        }
+      } catch (error) {
+        console.error("Erreur de vérification des signatures:", error);
+      }
+    }
+
+    // Fonctions de navigation
+    function startContract() {
+      document.getElementById('home').style.display = 'none';
+      document.getElementById('contract').style.display = 'block';
+      document.getElementById('contract').classList.add('page-transition');
+      
+      // Démarrer la musique
+      const bgMusic = document.getElementById('bg-music');
+      bgMusic.volume = 0.3;
+      bgMusic.play().catch(e => console.log("Lecture audio bloquée par le navigateur"));
+    }
+    
+    function goToProfile() {
+      document.getElementById('contract').style.display = 'none';
+      document.getElementById('profile').style.display = 'block';
+      document.getElementById('profile').classList.add('page-transition');
+    }
+    
+    function goToHome() {
+      document.getElementById('profile').style.display = 'none';
+      document.getElementById('home').style.display = 'flex';
+      document.getElementById('home').classList.add('page-transition');
+    }
+
+    // Fonctions d'animation
+    function generateRandomHearts() {
+      const numHearts = 20;
+      const container = document.body;
+      
+      for (let i = 0; i < numHearts; i++) {
+        setTimeout(() => {
+          createHeartAnimation(
+            Math.random() * window.innerWidth,
+            Math.random() * window.innerHeight
+          );
+        }, i * 300);
+      }
+    }
+    
+    function createHeartAnimation(x, y) {
+      if (!x) x = window.innerWidth / 2;
+      if (!y) y = window.innerHeight / 2;
+      
+      const heart = document.createElement('div');
+      heart.innerHTML = '❤';
+      heart.classList.add('heart-animation');
+      heart.style.left = `${x}px`;
+      heart.style.top = `${y}px`;
+      heart.style.fontSize = `${Math.random() * 30 + 20}px`;
+      heart.style.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
+      
+      // Variables aléatoires pour l'animation
+      const scale = Math.random() * 2 + 0.5;
+      const xEnd = (Math.random() - 0.5) * window.innerWidth;
+      const yEnd = -window.innerHeight * 0.8; // vers le haut
+      
+      heart.style.setProperty('--x', `${xEnd}px`);
+      heart.style.setProperty('--y', `${yEnd}px`);
+      heart.style.setProperty('--scale', scale);
+      
+      document.body.appendChild(heart);
+      
+      // Supprimer après l'animation
+      setTimeout(() => {
+        heart.remove();
+      }, 4000);
+    }
+    
+    // Initialisation au chargement
+    window.onload = function () {
+      document.getElementById('home').classList.add('page-transition');
+      
+      // Créer des cœurs au clic
+      document.addEventListener('click', function (e) {
+        createHeartAnimation(e.clientX, e.clientY);
+      });
+    }
+  </script>
+</body>
+
+</html>
